@@ -5,6 +5,7 @@ TODO: aca deberia crear una carpeta classes para poner mi clase request e import
 #Librerias sistema
 from lxml import etree
 import lxml.html
+import sys
 #Libs, clases propias
 from request import Request
 
@@ -13,12 +14,53 @@ from request import Request
 #Departamentos en venta dueno capital federal
 url_seed = "http://inmuebles.mercadolibre.com.ar/departamentos/capital-federal/due%C3%B1o_DisplayType_LF_PrCategId_AD"
 
-r = Request(url_seed)
-#Envio peticion y obtengo contenido
-status = r.get_status_response()
-html_source = r.get_contents()
-#Convierto en objeto DOM con lxml
-html = etree.HTML(html_source)
+
+
+#next page
+
+#sys.exit()
+
+x = 1
+
+while True:
+
+	if x == 1:
+		r = Request(url_seed)
+	else:
+		r = Request(next_page)	
+
+	#Envio peticion y obtengo contenido
+	status = r.get_status_response()
+	html_source = r.get_contents()
+	#Convierto en objeto DOM con lxml
+	html = etree.HTML(html_source)
+
+	if html.xpath(".//li[@class='last-child']/a/@href"):
+		next_page = html.xpath(".//li[@class='last-child']/a/@href")
+		next_page = next_page[0]
+	else:
+		next_page = None
+
+	print "Proxima pagina: ", next_page
+
+	print "ejecuto proceso"
+	print "Link pagina siguiente: "
+	print next_page
+
+	x = x + 1
+
+	if next_page == None:	
+		last_page = True
+		print "Fin paginacion"
+	else:
+		last_page = False
+
+	if last_page:
+		break
+
+
+sys.exit()
+
 
 #Comienzo el parseo, extraigo el html del listado 
 items = html.xpath(".//li[@class='list-view-item rowItem']")
