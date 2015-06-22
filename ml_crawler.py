@@ -39,6 +39,9 @@ for index, item in enumerate(items):
 	sup = sup[0]
 	amb = item.xpath(".//ul[@class='classified-details']/li[2]/text()")
 	amb	= amb[0]
+
+	#navego link de detalle de inmueble para extraer el telefono
+	link_with_phone = link + "?noIndex=true&showPhones=true"
 	print "Item n: ", index
 	print "Titulo: ", title
 	print "Descripcion: ", description
@@ -46,7 +49,19 @@ for index, item in enumerate(items):
 	print "Zona: ", location
 	print "Superficie: ", sup
 	print "Ambientes: ", amb
-	print "Link: ", link
+
+	print "Request a pagina detalle ..."
+	r = Request(link_with_phone)
+	html_source_detail = r.get_contents()
+	#Convierto en objeto DOM con lxml
+	html_detail = etree.HTML(html_source_detail)
+	if html_detail.xpath(".//span[@class='seller-details-box showPhone']/text()"):
+		phone = html_detail.xpath(".//span[@class='seller-details-box showPhone']/text()")
+		phone = phone[0]
+	else:
+		phone = "No informa"	
+	print "Telefono: ", phone
+
 	print " "
 
 
