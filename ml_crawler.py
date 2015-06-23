@@ -6,8 +6,12 @@ TODO: aca deberia crear una carpeta classes para poner mi clase request e import
 from lxml import etree
 import lxml.html
 import sys
+import os
+import csv
 #Libs, clases propias
 from request import Request
+#Vars
+articles = []
 
 print "############ Crawling simple para ML ##############"
 
@@ -20,6 +24,7 @@ print url_seed
 print " "
 
 x = 1
+n = 1
 
 while True:
 
@@ -43,6 +48,7 @@ while True:
 
 	print "> Extraccion de datos ..."
 	for index, item in enumerate(items):
+		n+=1
 		#extraigo datos
 		title = item.xpath(".//h3[@class='list-view-item-title']/a[1]/text()")
 		title = title[0]
@@ -80,8 +86,20 @@ while True:
 		else:
 			phone = "No informa"	
 		print ">> Telefono: ", phone
-
 		print " "
+
+		#Agrego a la lista de avisos
+		articles.append([n, 
+						title.encode("utf-8"), 
+						description.encode("utf-8"), 
+						price.encode("utf-8"),
+						location.encode("utf-8"),
+						amb.encode("utf-8"),
+						sup.encode("utf-8"),
+						phone.encode("utf-8"),
+						link.encode("utf-8")
+						])
+
 	##################################################
 
 	if html.xpath(".//li[@class='last-child']/a/@href"):
@@ -95,7 +113,7 @@ while True:
 	print " "
 	print " "
 
-	x = x + 1
+	x += 1
 
 	#Si no hay mas paginas viene en None, entonces salgo
 	if next_page == None:	
@@ -107,6 +125,15 @@ while True:
 	if last_page:
 		break
 
+#grab archivo
+print " "
+print "> Grabo archivo"   
+f= open('results.csv', 'wb')   
+file = csv.writer(f, delimiter='|', quotechar='"', quoting=csv.QUOTE_ALL)
+header_columns = [["Nro","Titulo","Descripcion","Precio","Localidad","Ambientes","Superficie","Telefono","Link"]]
+file.writerows(header_columns)
+file.writerows(articles)
+f.close()
 
 
 
