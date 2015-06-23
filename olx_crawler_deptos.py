@@ -54,9 +54,9 @@ while True:
 		description = description[0]
 		price = item.xpath(".//p[@class='items-price']/text()")
 		price = price[0]
-		location = item.xpath(".//li[@class='extra-info-location']/text()")
+		location = item.xpath(".//ul[@class='locations-tabs locations-empty locations-neighborhood']/li[3]/text()")
 		location = location[0]
-		link = item.xpath(".//h3[@class='list-view-item-title']/a/@href")
+		link = item.xpath(".//li[@class='item  ']/a/@href")
 		link = link[0]
 		sup = item.xpath(".//ul[@class='classified-details']/li[1]/text()")
 		sup = sup[0]
