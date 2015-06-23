@@ -32,9 +32,6 @@ class Request:
 		"""
 		Realiza request y devuelve contenido
 		Metodo recursivo
-		Recursividad :
-		http://librosweb.es/libro/python/capitulo_4/llamadas_recursivas.html
-
 		return string
 		"""
 		
