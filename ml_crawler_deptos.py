@@ -128,7 +128,7 @@ while True:
 #grab archivo
 print " "
 print "> Grabo archivo"   
-f= open('results.csv', 'wb')   
+f= open('results_ml_deptos_duenos.csv', 'wb')   
 file = csv.writer(f, delimiter='|', quotechar='"', quoting=csv.QUOTE_ALL)
 header_columns = [["Nro","Titulo","Descripcion","Precio","Localidad","Ambientes","Superficie","Telefono","Link"]]
 file.writerows(header_columns)

@@ -58,32 +58,38 @@ while True:
 		location = location[0]
 		link = item.xpath(".//li[@class='item  ']/a/@href")
 		link = link[0]
-		sup = item.xpath(".//ul[@class='classified-details']/li[1]/text()")
-		sup = sup[0]
-		amb = item.xpath(".//ul[@class='classified-details']/li[2]/text()")
-		amb	= amb[0]
 
 		#navego link de detalle de inmueble para extraer el telefono
-		link_with_phone = link + "?noIndex=true&showPhones=true"
+		
 		print ">> Item n: ", index
 		print ">> Titulo: ", title
 		print ">> Descripcion: ", description
 		print ">> Precio: ", price
 		print ">> Zona: ", location
-		print ">> Superficie: ", sup
-		print ">> Ambientes: ", amb
+		
 
 		print "## Request a pagina detalle ..."
-		r = Request(link_with_phone)
+		r = Request(link)
 		html_source_detail = r.get_contents()
 		#Convierto en objeto DOM con lxml
 		html_detail = etree.HTML(html_source_detail)
-		if html_detail.xpath(".//span[@class='seller-details-box showPhone']/text()"):
-			phone = html_detail.xpath(".//span[@class='seller-details-box showPhone']/text()")
+		if html_detail.xpath(".//p[@class='icons icon-phone user-phone']/text()"):
+			phone = html_detail.xpath(".//p[@class='icons icon-phone user-phone']/text()")
 			phone = phone[0]
 		else:
 			phone = "No informa"	
+
+		sup = item.xpath(".//ul[@class='optionals']/li[1]/span[2]/text()")
+		sup = sup[0]
+		amb = item.xpath(".//ul[@class='optionals']/li[4]/span[2]/text()")
+		dorm = dorm[0]			
+
+		#TODO: Aca tengo que buscar la superficie, y no me informa ambientes sino dormitorios	
+		
+		print ">> Superficie: ", sup
+		print ">> Dormitorios: ", dorm	
 		print ">> Telefono: ", phone
+
 		print " "
 
 		#Agrego a la lista de avisos
@@ -92,7 +98,7 @@ while True:
 						description.encode("utf-8"), 
 						price.encode("utf-8"),
 						location.encode("utf-8"),
-						amb.encode("utf-8"),
+						dorm.encode("utf-8"),
 						sup.encode("utf-8"),
 						phone.encode("utf-8"),
 						link.encode("utf-8")
@@ -100,11 +106,14 @@ while True:
 
 	##################################################
 
-	if html.xpath(".//li[@class='last-child']/a/@href"):
-		next_page = html.xpath(".//li[@class='last-child']/a/@href")
+	#Busco la siguiente pagina
+	if html.xpath(".//a[@class='icons pagination-arrow icon-arrow-right ']/@href"):
+		next_page = html.xpath(".//a[@class='icons pagination-arrow icon-arrow-right ']/@href")
 		next_page = next_page[0]
 	else:
 		next_page = None
+
+	
 
 	print "> Proxima pagina: "
 	print next_page
@@ -126,9 +135,9 @@ while True:
 #grab archivo
 print " "
 print "> Grabo archivo"   
-f= open('results.csv', 'wb')   
+f= open('results_olx_deptos_dueno.csv', 'wb')   
 file = csv.writer(f, delimiter='|', quotechar='"', quoting=csv.QUOTE_ALL)
-header_columns = [["Nro","Titulo","Descripcion","Precio","Localidad","Ambientes","Superficie","Telefono","Link"]]
+header_columns = [["Nro","Titulo","Descripcion","Precio","Localidad","Dormitorios","Superficie","Telefono","Link"]]
 file.writerows(header_columns)
 file.writerows(articles)
 f.close()
