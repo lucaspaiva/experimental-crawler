@@ -17,6 +17,9 @@ class Request:
 	#Pagina inicial paginado (JSON): 	
 	url_first_page_paging = ""
 	content_type = "html"
+	headers = {}
+	method_type = ""
+
 	__timeout__ = 10 #Float segundos para que genere timout
 	__max_retry__ = 4 #cantidad de intentos
 	__seconds__ = 20 #segundos de espera antes de nuevo intento de request
@@ -25,8 +28,10 @@ class Request:
 	error = []
 
 	#Constructor:
-	def __init__(self,url):
+	def __init__(self,url,headers,method):
 		self.url_first_page = url
+		self.method_type = method
+		self.headers = headers
 
 	def get_contents(self,retrys=1):
 		"""
@@ -38,6 +43,9 @@ class Request:
 		try:
 			r = requests.post(self.url_first_page, timeout=self.__timeout__)
 			ret = r.content
+			print "res"
+			print ret
+			sys.exit()
 
 			if len(r.content) == 0:
 				#TODO: Si esta vacio es porque algo anda mal, tambien habria que guardarlo en un log de errores para un futuro procesamiento.

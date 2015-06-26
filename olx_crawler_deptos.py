@@ -17,6 +17,7 @@ print "############ Crawling simple para OLX ##############"
 
 #Departamentos en venta de dueno
 url_seed = "http://capitalfederal.olx.com.ar/nf/departamentos-casas-en-venta-cat-367/due%C3%B1o/-flo_apartaments"
+url_seed = "http://www.olx.com.ar/"
 print "URL Seed: "
 print url_seed
 print " "
