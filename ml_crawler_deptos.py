@@ -12,6 +12,8 @@ import csv
 from request import Request
 #Vars
 articles = []
+method_type = "post"
+headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0'}
 
 print "############ Crawling simple para ML ##############"
 
@@ -31,9 +33,9 @@ while True:
 	print "> Pagina: ", x
 	print "> Ejecuto request ..."
 	if x == 1:
-		r = Request(url_seed)
+		r = Request(url_seed,method_type,headers)
 	else:
-		r = Request(next_page)	
+		r = Request(next_page,method_type,headers)	
 
 	#Envio peticion y obtengo contenido
 	status = r.get_status_response()
@@ -76,7 +78,7 @@ while True:
 		print ">> Ambientes: ", amb
 
 		print "## Request a pagina detalle ..."
-		r = Request(link_with_phone)
+		r = Request(link_with_phone,method_type,headers)
 		html_source_detail = r.get_contents()
 		#Convierto en objeto DOM con lxml
 		html_detail = etree.HTML(html_source_detail)
