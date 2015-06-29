@@ -18,7 +18,7 @@ class Request:
 	url_first_page_paging = ""
 	content_type = "html"
 	headers = {}
-	method_type = ""
+	method_type = "get"
 
 	__timeout__ = 10 #Float segundos para que genere timout
 	__max_retry__ = 4 #cantidad de intentos
@@ -28,7 +28,7 @@ class Request:
 	error = []
 
 	#Constructor:
-	def __init__(self,url,headers,method):
+	def __init__(self,url,method,headers={}):
 		self.url_first_page = url
 		self.method_type = method
 		self.headers = headers
@@ -41,11 +41,13 @@ class Request:
 		"""
 		
 		try:
-			r = requests.post(self.url_first_page, timeout=self.__timeout__)
+
+			if self.method_type == "get":
+				r = requests.get(self.url_first_page, headers=self.headers, timeout=self.__timeout__)
+			elif self.method_type == "post":
+				r = requests.post(self.url_first_page, headers=self.headers, timeout=self.__timeout__)
+
 			ret = r.content
-			print "res"
-			print ret
-			sys.exit()
 
 			if len(r.content) == 0:
 				#TODO: Si esta vacio es porque algo anda mal, tambien habria que guardarlo en un log de errores para un futuro procesamiento.
